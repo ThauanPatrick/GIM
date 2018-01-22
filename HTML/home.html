@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>G.I.M</title>
+    {% load staticfiles %}
+  <link href="{% static "master.css" %}" rel="stylesheet">
+    <script type="text/javascript">
+
+        var $range = document.querySelector('input'),
+        $value = document.querySelector('span');
+
+        $range.addEventListener('input', function() {
+        $value.textContent = this.value;
+
+      });
+    </script>
+  </head>
+  <body>
+    <div class="=form_pesquisa">
+      <form class="formulario" action="index.html" method="post">
+        <input type="search" name="pesquisa" value="" id="pesquisa">
+        {% load staticfiles %}
+        <input type="image" src="{% static "metro_search_11261.png"%}" value="" class="pesquisar"> <br/>
+
+        <div class="datas">
+
+        <p id="p1">DATA INICIAL: </p>
+        <input type="date" name="data" value="" id="data">
+        <p>DATA FINAL: </p>
+        <input type="date" name="dataf" value="" id="dataf">
+
+      </div>
+
+      <p id="p2">PERCENTUAL DE NUVENS: </p>
+
+      <div class="nuvens">
+
+        <input type="range" id="vol" name="vol" value="0" min="0" max="100"
+        oninput="display.value=value" onchange="display.value=value">
+        <input type="text" id="display" value="0"
+        oninput="vol.value=value" onchange="vol.value=value">
+        <span id="spam">%</span>
+
+      </div>
+
+
+
+      <select class="Satelite">
+        <option value="Satelite 1">Satelite1</option>
+        <option value="Satelite 2">Satelite2</option>
+        <option value="Satelite 3">Satelite3</option>
+        <option value="Satelite 4">Satelite4</option>
+      </select>
+
+      <select class="Sensor">
+        <option value="Sensor 1">Sensor4</option>
+        <option value="Sensor 2">Sensor2</option>
+        <option value="Sensor 3">Sensor3</option>
+        <option value="Sensor 4">Sensor4</option>
+      </select>
+
+
+
+      <div class="coordenadas">
+
+      <p>COORDENADAS: </p>
+      <span id="x">x: </span>
+      <input type="number" name="coorX" value="" id="coorX" step=any> <br>
+      <span id="Y">y: </span>
+      <input type="number" name="coorY" value="" id="coorY" step=any>
+
+      </div>
+
+      <div class="orbitas">
+        <span>Órbita:</span>
+        <input type="number" name="orbita" value="" id="orbita" step=any> <br>
+        <span>Row:</span>
+        <input type="number" name="row" value="" id="row" step=any>
+      </div>
+
+      </form>
+
+    </div>
+  </body>
+</html>
