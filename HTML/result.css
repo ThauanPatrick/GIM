@@ -1,0 +1,21 @@
+
+* {
+ margin: 0px;
+ padding: 0px;
+}
+
+.painel_p {
+  width: auto;
+  height: auto;
+  border: 0;
+  background-color: #DCDCDC;
+  border-radius: 4px;
+  margin: 30px;
+  float: left;
+}
+
+.resultados_p {
+  padding: 10px;
+  font-size: 20px;
+  float: left;
+}

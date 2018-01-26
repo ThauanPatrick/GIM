@@ -3,8 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>G.I.M</title>
-    {% load staticfiles %}
-  <link href="{% static "master.css" %}" rel="stylesheet">
+    {% load static %}
+    <link type="text/css" rel="stylesheet" href="{% static 'master.css' %}">
+
     <script type="text/javascript">
 
         var $range = document.querySelector('input'),
@@ -20,8 +21,7 @@
     <div class="=form_pesquisa">
       <form class="formulario" action="index.html" method="post">
         <input type="search" name="pesquisa" value="" id="pesquisa">
-        {% load staticfiles %}
-        <input type="image" src="{% static "metro_search_11261.png"%}" value="" class="pesquisar"> <br/>
+        <input type="image" src="{% static 'metro_search_11261.png' %}" value="" class="pesquisar"> <br/>
 
         <div class="datas">
 
@@ -80,6 +80,10 @@
       </div>
 
       </form>
+
+      <div class="resultados">
+          <p class="resultado">Sem resultados para esta pesquisa! =(</p>
+      </div>
 
     </div>
   </body>

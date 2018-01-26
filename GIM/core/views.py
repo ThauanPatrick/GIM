@@ -2,50 +2,87 @@ import os, glob
 from osgeo import gdal, osr, ogr
 import numpy
 import os
-import datetime
 from models import imagens
 from django.shortcuts import render
+import psycopg2
 
-diretorio_principal = '//172.23.5.17/'
-diretorio = 'Imagens/'
+error = int(0)
 
-def home(request):
+def delete_table():
+    con = psycopg2.connect(host='localhost', database='gim',
+                           user='postgres', password='senha')
+    cur = con.cursor()
+    sql = "ALTER SEQUENCE public.core_imagens_id_seq RESTART WITH 1;"
+    cur.execute(sql)
+    sql = 'DELETE FROM public.core_imagens;'
+    cur.execute(sql)
+    con.commit()
+    con.close()
+
+
+diretorio_principal = '//172.23.5.17/Imagens/spot_sipam/'
+diretorio = 'spot/'
+
+def reset(request):
+
+    delete_table()
 
     def gdal_analise(diretorio, arquivo):
 
         dataset = gdal.Open(diretorio + arquivo, gdal.GA_ReadOnly)
 
-#        tipo = dataset.GetDriver().LongName()
+        try:
+            tipo = dataset.GetDriver().LongName
 
-        projecao = dataset.GetProjection()
+        except AttributeError:
 
-        geotransform = dataset.GetGeoTransform()
+            try:
+                tipo = dataset.GetDriver().ShortName
+            except AttributeError:
+                error += 1
 
-        band = dataset.GetRasterBand(1)
+        try:
+            projecao = dataset.GetProjection()
+        except AttributeError:
+            error += 1
 
-        tipo_banda = gdal.GetDataTypeName(band.DataType)
+        try:
+            global geotransform
+            geotransform = dataset.GetGeoTransform()
+        except AttributeError:
+            error += 1
 
-        if band.GetOverviewCount() > 0:
-            band_overview = band.GetOverviewCount()
+        try:
+            tamanho_pixel = geotransform[1]
 
-        if band.GetRasterColorTable():
-            band_color = band.GetRasterColorTable().GetCount()
+            band = dataset.GetRasterBand(1)
 
-        numero_banda = int(dataset.RasterCount)
+            tipo_banda = gdal.GetDataTypeName(band.DataType)
 
-        ulx, xres, xskew, uly, yskew, yres = dataset.GetGeoTransform()
-        lrx = ulx + (dataset.RasterXSize * xres)
-        lry = uly + (dataset.RasterYSize * yres)
+            numero_banda = int(dataset.RasterCount)
 
-        superior_x = int(ulx)
-        superior_y = int(uly)
-        inferior_x = int(lrx)
-        inferior_y = int(lry)
+        except AttributeError:
+            error += 1
+
+        try:
+
+            ulx, xres, xskew, uly, yskew, yres = dataset.GetGeoTransform()
+            lrx = ulx + (dataset.RasterXSize * xres)
+            lry = uly + (dataset.RasterYSize * yres)
+
+            superior_x = int(ulx)
+            superior_y = int(uly)
+            inferior_x = int(lrx)
+            inferior_y = int(lry)
+
+        except AttributeError:
+            error += 1
+
 
         i = imagens(banda = numero_banda, superior_x = superior_x,
                     superior_y = superior_y, inferior_x = inferior_x, inferior_y = inferior_y,
                     tipo_banda = tipo_banda, projecao = projecao,
-                    caminho = diretorio, nome = arquivo)
+                    caminho = diretorio, nome = arquivo, tamanho_pixel = tamanho_pixel, tipo_imagem = tipo)
         i.save()
 
 
@@ -68,7 +105,13 @@ def home(request):
 
                     if name_file[-1] == 'tif':
 
-                        gdal_analise(diretorio_principal + diretorio, arquivo)
+                        try:
+
+                            gdal_analise(diretorio_principal + diretorio, arquivo)
+
+                        except UnicodeDecodeError:
+                            global error
+                            error += 1
 
         else:
             print 'arquivo: ' + diretorio_principal + diretorio
