@@ -1,14 +1,19 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>G.I.M</title>
-    <link type="text/css" rel="stylesheet" href="result.css">
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <div class="painel_p">
-      <p class="resultados_p">l8_oli_001066_20130521_b654_fuseo_sirgas2000_utm</p>
-    </div>
-  </body>
-</html>
+{% extends "home.html" %}
+{% block container %}
+
+{% for resultado in resultados %}
+      <p class="resultados_p">{{ resultado.nome }}</p>
+      <a href="{{resultado.download}}" download="{{ resultado.nome }}">
+        <div class="download">
+
+        </div>
+      </a>
+      <a href="file://{{ resultado.diretorio }}">
+        <div class="dir">
+
+        </div>
+      </a>
+
+      <br>
+{% endfor %}
+{% endblock %}

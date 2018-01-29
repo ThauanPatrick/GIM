@@ -118,4 +118,4 @@ def reset(request):
 
     listar(diretorio_principal, diretorio)
 
-    return render(request, 'home.html')
+    return render(request, 'reset.html')
